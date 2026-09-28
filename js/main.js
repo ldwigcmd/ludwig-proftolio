@@ -8,6 +8,7 @@
     window.Theme.init();
     window.Nav.init();
     window.Reveal.init();
+    window.Depth.init();
     window.Contact.init();
   }
 

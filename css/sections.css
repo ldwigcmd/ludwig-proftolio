@@ -1,76 +1,268 @@
 /* ==========================================================================
-   sections.css — what sits inside the cards
+   sections.css — the stories and what sits inside them
    ========================================================================== */
 
-/* Hero --------------------------------------------------------------------- */
+/* Story anatomy: picture, then body ----------------------------------------- */
 
-.hero__core {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: clamp(26rem, 20rem + 18vw, 36rem);
+.story__art {
+  position: relative;
+  flex: none;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: var(--fill);
 }
 
-.hero__name {
+.story__art--banner { aspect-ratio: 9 / 4; }
+
+/* Each drawing's own colour fills any space its frame adds around it */
+.story__art[data-art="wetware"]     { background-color: var(--c-water); }
+.story__art[data-art="brailingo"]   { background-color: var(--c-orange); }
+.story__art[data-art="kiosk"]       { background-color: var(--c-green); }
+.story__art[data-art="degree"]      { background-color: var(--c-indigo); }
+.story__art[data-art="certificate"] { background-color: var(--c-yellow); }
+
+.story__art > svg,
+.story__art > img,
+.story__art > video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Pictures lean in a little when their story is hovered */
+.story__art > svg,
+.story__art > img {
+  transition: scale 900ms var(--ease);
+}
+
+.tile:hover .story__art > svg,
+.tile:hover .story__art > img {
+  scale: 1.03;
+}
+
+.story__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .story__body {
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+}
+
+.story__title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--tracking-snug);
+}
+
+.story__sub {
+  margin-top: 0.3rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.story__meta {
+  margin-top: 0.3rem;
+  font-size: var(--fs-small);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.story__desc {
+  max-width: 38rem;
+  margin-top: var(--space-sm);
+}
+
+.story__points {
+  max-width: 44rem;
+  margin-top: var(--space-sm);
+  padding-left: 1.1rem;
+}
+
+.story__points li + li {
+  margin-top: 0.35rem;
+}
+
+.story__points li::marker {
+  color: var(--text-tertiary);
+}
+
+.story__tech {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+}
+
+.story__foot {
+  margin-top: auto;
+  padding-top: var(--space-lg);
+}
+
+.story__soon {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+a.tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* The lead story: photo on the left, the person on the right, full width -- */
+
+.story--lead {
+  flex-direction: row;
+  min-height: clamp(28rem, 22rem + 14vw, 36rem);
+}
+
+.story__photo {
+  flex: 0 0 38%;
+}
+
+.portrait-frame {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--fill);
+}
+
+.portrait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 28%;
+}
+
+.lead {
+  justify-content: center;
+  padding: 2rem clamp(1.75rem, 1rem + 3vw, 4rem);
+}
+
+.lead__name {
   font-size: var(--fs-display);
   font-weight: 700;
   line-height: 1;
   letter-spacing: var(--tracking-tight);
 }
 
-.hero__role {
-  margin-top: var(--space-md);
+.lead__role {
+  margin-top: var(--space-sm);
   color: var(--text);
   font-size: var(--fs-lead);
   font-weight: 500;
 }
 
-.hero__tagline {
+.lead__tagline {
   max-width: 34rem;
   margin-top: var(--space-xs);
   font-size: var(--fs-lead);
 }
 
-.hero__actions {
+.lead__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: var(--space-xl);
+  gap: var(--space-xs);
+  margin-top: var(--space-lg);
 }
 
-/* The portrait is itself the card's core, filling the bezel edge to edge */
-.portrait {
-  padding: 0;
-  width: 100%;
-  height: auto;
-  min-height: 22rem;
-  object-fit: cover;
-  object-position: 50% 30%;
+.lead__email {
+  margin-top: var(--space-sm);
 }
 
-/* Phones: photo first and shorter, so photo and name share the first screen */
+/* Phones: the photo on top, then the person */
 @media (max-width: 767px) {
-  .hero__core {
+  .story--lead {
+    flex-direction: column;
     min-height: 0;
   }
 
-  #hero > .tile:last-child {
-    order: -1;
+  .story__photo {
+    flex: none;
+    aspect-ratio: 4 / 3;
   }
 
   .portrait {
-    min-height: 0;
-    aspect-ratio: 4 / 3;
     object-position: 50% 22%;
+  }
+
+  .lead {
+    padding: 1.5rem;
   }
 }
 
-/* About -------------------------------------------------------------------- */
+/* Email address in plain view, with a copy button ------------------------- */
+
+/* The copy button stays beside the address; the address itself breaks before
+   the @ when the line is too narrow */
+.email {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.email__link {
+  min-width: 0;
+  color: var(--text);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.email__link:hover {
+  color: var(--accent);
+}
+
+.email__copy {
+  width: 40px;
+  height: 40px;
+}
+
+.email__icon {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.email__icon--done {
+  opacity: 0;
+  transform: scale(0.6);
+  color: var(--accent);
+}
+
+.email__copy.is-copied .email__icon--copy {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.email__copy.is-copied .email__icon--done {
+  opacity: 1;
+  transform: none;
+}
+
+/* About: the description in one box, the quick facts in another ---------- */
+
+.about__text {
+  justify-content: center;
+}
 
 .about__text p {
-  max-width: 38rem;
-  font-size: var(--fs-lead);
-  line-height: 1.55;
+  color: var(--text);
+  font-size: clamp(1.1875rem, 1.05rem + 0.6vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: var(--tracking-snug);
 }
 
 .about__text p + p {
@@ -79,7 +271,8 @@
 
 .facts {
   display: grid;
-  gap: var(--space-lg);
+  align-content: center;
+  gap: var(--space-md);
   margin: 0;
 }
 
@@ -90,154 +283,324 @@
 }
 
 .facts dd {
-  margin: 0.15rem 0 0;
+  margin: 0.1rem 0 0;
   color: var(--text);
   font-weight: 500;
   line-height: 1.4;
 }
 
-/* Shared card text ---------------------------------------------------------- */
+/* Experience: picture beside the story on wide screens ---------------------- */
 
-.card__title {
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  letter-spacing: var(--tracking-snug);
+@media (min-width: 768px) {
+  .story--wide {
+    flex-direction: row;
+  }
+
+  /* The column can be taller than the drawing: show all of it, centred, on
+     its own colour rather than cropping its sides */
+  .story--wide .story__art {
+    display: flex;
+    flex: 0 0 42%;
+    align-items: center;
+    aspect-ratio: auto;
+  }
+
+  .story--wide .story__art > svg {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
 }
 
-.card__sub {
-  margin-top: 0.3rem;
-  color: var(--text);
-  font-weight: 500;
+/* Projects: a banner picture, then the story left and the wiring right ------ */
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  gap: var(--space-xl) clamp(2rem, 1rem + 4vw, 5rem);
+  align-items: start;
 }
 
-.card__desc {
-  margin-top: var(--space-md);
-  max-width: 40rem;
+@media (min-width: 768px) {
+  .story__body.project {
+    padding: 2rem 2.25rem 2.25rem;
+  }
 }
 
-.card__meta {
-  margin-top: var(--space-md);
-  font-size: var(--fs-small);
-  color: var(--text-tertiary);
-  font-variant-numeric: tabular-nums;
-}
-
-.card__tech {
-  margin-top: 0.3rem;
-  font-size: var(--fs-small);
-  color: var(--text-secondary);
-}
-
-.card__foot {
-  margin-top: auto;
-  padding-top: var(--space-xl);
-}
-
-.card__soon {
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--text-tertiary);
-}
-
-.card__points {
-  margin-top: var(--space-md);
-  padding-left: 1.1rem;
-  max-width: 44rem;
-}
-
-.card__points li + li {
-  margin-top: 0.4rem;
-}
-
-.card__points li::marker {
-  color: var(--text-tertiary);
-}
-
-/* Cards that stack their content and pin the footer to the bottom */
-.stack {
+.project__text {
   display: flex;
   flex-direction: column;
 }
 
-/* Experience: dates on the left inside the card ---------------------------- */
-
-.job {
-  display: grid;
-  grid-template-columns: 11rem minmax(0, 1fr);
-  column-gap: var(--space-xl);
+.project__title {
+  font-size: var(--fs-product);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
 }
 
-.job + .job {
-  margin-top: var(--space-xl);
+.project .story__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-lead);
 }
 
-.job__when {
-  padding-top: 0.35rem;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--text-tertiary);
-  font-variant-numeric: tabular-nums;
-}
-
-@media (max-width: 640px) {
-  .job {
+@media (max-width: 860px) {
+  .project {
     grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--space-xs);
   }
 }
 
-/* Projects ----------------------------------------------------------------- */
+/* The wiring: parts pinned to one continuous trace, top to bottom. A pulse of
+   light runs down it once when the story comes into view, and again on hover. */
 
-.project__media {
-  width: 100%;
-  margin-bottom: var(--space-lg);
-  border-radius: var(--radius-field);
-  background-color: var(--canvas);
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-}
-
-/* Skills: one card, a row per group ---------------------------------------- */
-
-.skills {
+.flow {
+  --gap: 1.75rem;
+  --trace-x: 6px;        /* centre of the trace */
+  --pin-y: 0.72rem;      /* centre of a part name's first line */
   display: grid;
-  gap: var(--space-lg);
-  margin: 0;
+  gap: var(--gap);
+  padding-top: 0.25rem;
 }
 
-.skills div {
+.flow__node {
+  position: relative;
   display: grid;
-  grid-template-columns: 16rem minmax(0, 1fr);
-  gap: 0.25rem var(--space-xl);
+  padding-left: 1.75rem;
 }
 
-.skills dt {
+.flow__part {
   color: var(--text);
   font-weight: 600;
+  line-height: 1.3;
 }
 
-.skills dd {
-  margin: 0;
+.flow__note {
+  font-size: var(--fs-small);
+  line-height: 1.4;
+}
+
+/* The pin where a part sits on the trace */
+.flow__node::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--pin-y) - 6px);
+  left: calc(var(--trace-x) - 6px);
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--text-tertiary);
+  border-radius: 50%;
+  background-color: var(--core);
+}
+
+/* The controller at the centre of the system: a solid blue pin */
+.flow__node--hub::before {
+  border-color: var(--accent);
+  background-color: var(--accent);
+}
+
+.flow__node--hub .flow__part {
+  color: var(--accent);
+}
+
+/* The trace from this part's pin down to the next one */
+.flow__node:not(:last-child)::after,
+.flow__pulse {
+  position: absolute;
+  top: var(--pin-y);
+  left: calc(var(--trace-x) - 1px);
+  width: 2px;
+  height: calc(100% + var(--gap));
+}
+
+.flow__node:not(:last-child)::after {
+  content: "";
+  background-color: var(--fill-strong);
+}
+
+/* The bus a part is reached through, written beside the trace */
+.flow__via {
+  position: absolute;
+  bottom: calc(100% + (var(--gap) - 1.2em) / 2);
+  left: 1.75rem;
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--accent);
+}
+
+/* A short bright window slides down each trace in turn */
+.flow__pulse {
+  z-index: 1;
+  background-color: var(--accent);
+  clip-path: inset(0 0 100% 0);
+}
+
+.is-in .flow__pulse {
+  animation: flow-pulse 900ms var(--ease) both;
+  animation-delay: calc(500ms + var(--n) * 420ms);
+}
+
+/* Same motion under a second name, so hovering the story replays it */
+.is-in:hover .flow__pulse {
+  animation-name: flow-pulse-again;
+  animation-delay: calc(var(--n) * 420ms);
+}
+
+@keyframes flow-pulse {
+  0%   { clip-path: inset(0 0 100% 0); }
+  35%  { clip-path: inset(0 0 55% 0); }
+  100% { clip-path: inset(100% 0 0 0); }
+}
+
+@keyframes flow-pulse-again {
+  0%   { clip-path: inset(0 0 100% 0); }
+  35%  { clip-path: inset(0 0 55% 0); }
+  100% { clip-path: inset(100% 0 0 0); }
+}
+
+/* Drawn pictures come alive while on screen (reveal.js adds .is-playing) ---- */
+
+/* The water drifts by one wave period, forever, only while visible */
+.art__drift {
+  animation: art-drift 9s linear infinite paused;
+}
+
+.art__drift--slow {
+  animation-duration: 15s;
+}
+
+.is-playing .art__drift,
+.is-playing .art__blink {
+  animation-play-state: running;
+}
+
+@keyframes art-drift {
+  to { transform: translateX(-120px); }
+}
+
+.art__blink {
+  animation: art-blink 2.4s steps(1) infinite paused;
+}
+
+@keyframes art-blink {
+  50% { opacity: 0.25; }
+}
+
+/* BraiLingo's signature: the pins push the Braille dots up, one letter at a time */
+.art__dot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.is-in .art__dot {
+  animation: dot-rise 520ms var(--ease) both;
+  animation-delay: calc(350ms + var(--c) * 380ms + var(--k) * 30ms);
+}
+
+.is-in:hover .art__dot {
+  animation-name: dot-rise-again;
+  animation-delay: calc(var(--c) * 220ms + var(--k) * 20ms);
+}
+
+@keyframes dot-rise {
+  from { transform: scale(0.45); fill: #f2c98a; }
+  to   { transform: none; }
+}
+
+@keyframes dot-rise-again {
+  from { transform: scale(0.45); fill: #f2c98a; }
+  to   { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-in .flow__pulse,
+  .is-in:hover .flow__pulse,
+  .art__drift,
+  .art__blink,
+  .is-in .art__dot,
+  .is-in:hover .art__dot {
+    animation: none;
+  }
+
+  .tile:hover .story__art > svg,
+  .tile:hover .story__art > img {
+    scale: none;
+  }
+}
+
+/* Skills: a box per group, marked by its glyph in its own Apple colour ----- */
+
+.skill {
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.skill:nth-child(1) { --badge: #007aff; }
+.skill:nth-child(2) { --badge: #30b85a; }
+.skill:nth-child(3) { --badge: #ff9500; }
+.skill:nth-child(4) { --badge: #af52de; }
+.skill:nth-child(5) { --badge: #ff2d55; }
+.skill:nth-child(6) { --badge: #8e8e93; }
+
+.skill .glyph {
+  width: 30px;
+  height: 30px;
+  margin-bottom: var(--space-sm);
+  color: var(--badge);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.skill__items {
+  color: var(--text);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: var(--tracking-snug);
+}
+
+.skill__group {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-small);
   color: var(--text-secondary);
 }
 
-@media (max-width: 640px) {
-  .skills div {
-    grid-template-columns: minmax(0, 1fr);
+@media (max-width: 1023px) and (min-width: 768px) {
+  #skills-grid .skill {
+    grid-column: span 6;
   }
 }
 
 /* Certificates ------------------------------------------------------------- */
 
+/* The list fills whatever height the row gives it and scrolls past that, so
+   adding a certificate never changes the size of the story. A fade at the
+   bottom says there is more until the list is scrolled to its end. */
 .certs {
   display: grid;
-  gap: var(--space-lg);
-  margin-top: var(--space-md);
-  /* Fixed height: two certificates fit, more scroll inside the card */
-  max-height: 14rem;
+  flex: 1 1 0;
+  align-content: start;
+  gap: var(--space-md);
+  min-height: 9rem;
+  margin-top: var(--space-sm);
+  padding-right: var(--space-sm);
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding-right: var(--space-sm);
+}
+
+.certs.has-more {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent);
+}
+
+/* One column: no neighbour sets the height, so the list gets its own */
+@media (max-width: 767px) {
+  .certs {
+    flex: none;
+    max-height: 15rem;
+  }
 }
 
 .cert__name {
@@ -254,7 +617,7 @@
 
 .cert__view {
   display: inline-block;
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
   font-size: var(--fs-small);
   font-weight: 500;
 }

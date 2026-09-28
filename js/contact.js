@@ -95,7 +95,34 @@ window.Contact = (function () {
     }, 2200);
   }
 
+  // Copy buttons beside the email address; the check shows for two seconds
+  function onCopy(e) {
+    var btn = e.target.closest("[data-copy]");
+    if (!btn || !navigator.clipboard) return;
+    navigator.clipboard.writeText(btn.getAttribute("data-copy")).then(function () {
+      var note = btn.parentNode.querySelector('[role="status"]');
+      btn.classList.add("is-copied");
+      if (note) note.textContent = "Email address copied";
+      window.clearTimeout(btn._reset);
+      btn._reset = window.setTimeout(function () {
+        btn.classList.remove("is-copied");
+        if (note) note.textContent = "";
+      }, 2000);
+    }, function () {
+      // Copy refused (e.g. the browser blocks it): select the address instead
+      var link = btn.parentNode.querySelector(".email__link");
+      var range = document.createRange();
+      range.selectNodeContents(link);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    });
+  }
+
   function init() {
+    // Copying needs https (or localhost); elsewhere the button would do nothing
+    document.querySelectorAll("[data-copy]").forEach(function (b) { b.hidden = !navigator.clipboard; });
+    document.addEventListener("click", onCopy);
+
     form = document.getElementById("contact-form");
     status = document.getElementById("contact-status");
     if (!form) return;

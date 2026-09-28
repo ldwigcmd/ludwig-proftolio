@@ -30,7 +30,8 @@ window.PORTFOLIO = {
         "Installed and configured Linux on a kiosk system, ensuring proper system setup and functionality.",
         "Applied Excel formulas to automate data entry, identify and remove duplicate records, perform calculations, and compare datasets for improved data accuracy and efficiency."
       ],
-      tech: ["Linux", "Excel"]
+      tech: ["Linux", "Excel"],
+      art: "kiosk"
     }
   ],
 
@@ -45,10 +46,19 @@ window.PORTFOLIO = {
         "An ESP32-based IoT system that monitors water pH, TDS and temperature in real time. " +
         "A responsive web dashboard with secure controls shows the readings, and CSV data " +
         "logged to the ESP32's LittleFS storage feeds the graphs and reports.",
+      art: "wetware",
       thumb: "",
       url: "",
       video: "",
-      tech: ["ESP32", "C++", "JavaScript (ES6)", "LittleFS", "HTML5 Canvas"]
+      tech: ["ESP32", "C++", "JavaScript (ES6)", "LittleFS", "HTML5 Canvas"],
+      // How the system connects, top to bottom. `via` labels the link into a
+      // part, `hub` marks the controller at the centre of the system.
+      flow: [
+        { part: "Water sensors", note: "pH, TDS, temperature" },
+        { part: "ESP32", note: "Reads in real time", hub: true },
+        { part: "LittleFS", note: "CSV data logs" },
+        { part: "Web dashboard", note: "Graphs, reports, secure controls" }
+      ]
     },
     {
       title: "BraiLingo",
@@ -61,20 +71,27 @@ window.PORTFOLIO = {
         "drives PWM-controlled solenoid actuators through a PCF8575 I2C GPIO expander, and a " +
         "companion Flutter Android app connects over TCP to deliver adaptive, spaced-repetition " +
         "Braille quizzes.",
+      art: "brailingo",
       thumb: "",
       url: "https://youtu.be/tp2VrH9mEes",
       video: "",
-      tech: ["Raspberry Pi 4B", "Flutter", "PCF8575 I2C", "PWM solenoids", "TCP"]
+      tech: ["Raspberry Pi 4B", "Flutter", "PCF8575 I2C", "PWM solenoids", "TCP"],
+      flow: [
+        { part: "Flutter app", note: "Android, spaced-repetition quizzes" },
+        { part: "Raspberry Pi 4B", note: "Drives the device", via: "TCP", hub: true },
+        { part: "PCF8575", note: "GPIO expander", via: "I2C" },
+        { part: "Solenoid actuators", note: "Raise the Braille dots", via: "PWM" }
+      ]
     }
   ],
 
   skills: [
-    { title: "Languages and frameworks", items: ["C++", "Python", "Flutter"] },
-    { title: "Databases", items: ["MySQL", "PostgreSQL"] },
-    { title: "Hardware", items: ["ESP32", "Raspberry Pi 4B", "Arduino UNO", "KiCad"] },
-    { title: "Data and AI", items: ["Excel", "Power BI", "Artificial Intelligence", "Computer Vision", "Prompt Engineering"] },
-    { title: "AI assistants", items: ["Claude", "Gemini", "ChatGPT", "DeepSeek"] },
-    { title: "Systems and tools", items: ["Windows", "Linux", "Git", "GitHub"] }
+    { icon: "code", title: "Languages and frameworks", items: ["C++", "Python", "Flutter"] },
+    { icon: "database", title: "Databases", items: ["MySQL", "PostgreSQL"] },
+    { icon: "chip", title: "Hardware", items: ["ESP32", "Raspberry Pi 4B", "Arduino UNO", "KiCad"] },
+    { icon: "chart", title: "Data and AI", items: ["Excel", "Power BI", "Artificial Intelligence", "Computer Vision", "Prompt Engineering"] },
+    { icon: "chat", title: "AI assistants", items: ["Claude", "Gemini", "ChatGPT", "DeepSeek"] },
+    { icon: "terminal", title: "Systems and tools", items: ["Windows", "Linux", "Git", "GitHub"] }
   ],
 
   education: [
@@ -82,7 +99,8 @@ window.PORTFOLIO = {
       school: "Pampanga State University",
       degree: "Bachelor of Science in Computer Engineering",
       period: "2022–2026",
-      detail: "Formerly Don Honorio Ventura State University."
+      detail: "Formerly Don Honorio Ventura State University.",
+      art: "degree"
     }
   ],
 

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   layout.css — sections, bento grid, bezel cards, navigation, buttons
+   layout.css — sections, the story grid, story tiles, navigation, buttons
    ========================================================================== */
 
 .container {
@@ -14,22 +14,22 @@
 }
 
 .section--hero {
-  padding-top: clamp(7rem, 5rem + 5vw, 9rem);
+  padding-top: clamp(5.5rem, 4.5rem + 2vw, 6.5rem);
 }
 
 .section__title {
   font-size: var(--fs-h2);
   font-weight: 700;
   letter-spacing: var(--tracking-tight);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
-/* Bento grid: twelve columns above 768px, one below ----------------------- */
+/* The story grid: twelve columns with tight gutters, one column on phones -- */
 
 .bento {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--bento-gap);
+  gap: var(--grid-gap);
 }
 
 .tile--4  { grid-column: span 4; }
@@ -39,28 +39,21 @@
 .tile--8  { grid-column: span 8; }
 .tile--12 { grid-column: span 12; }
 
-/* Double bezel: a tinted shell holding a concentric inner core */
+/* A story tile: one rounded sheet, its picture on top, its text below */
 .tile {
+  position: relative;
   display: flex;
-  padding: var(--bezel);
-  border-radius: var(--radius-shell);
-  background-color: var(--shell);
-  box-shadow: 0 0 0 1px var(--ring), var(--shadow-ambient);
-}
-
-.tile__core {
-  flex: 1;
+  flex-direction: column;
   min-width: 0;
-  padding: 1.5rem;
-  border-radius: var(--radius-core);
+  overflow: hidden;
+  border-radius: var(--radius-tile);
   background-color: var(--core);
-  box-shadow: inset 0 1px 1px var(--highlight);
+  box-shadow: 0 0 0 1px var(--ring), var(--shadow-ambient);
+  color: var(--text-secondary);
 }
 
-@media (min-width: 768px) {
-  .tile__core {
-    padding: 2.75rem;
-  }
+a.tile:hover {
+  text-decoration: none;
 }
 
 @media (max-width: 767px) {
@@ -71,6 +64,78 @@
   .bento > * {
     grid-column: 1 / -1;
   }
+}
+
+/* Depth (js/depth.js): once a story has faded in, it lifts off the page and
+   catches the light where the pointer is; small stories also lean toward it.
+   Their contents float a little above and the photo sits a little below. */
+
+.js .tile.tilt-live {
+  transform: perspective(1400px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 900ms var(--ease), box-shadow 900ms var(--ease);
+  transition-delay: 0s;
+}
+
+/* Wide stories are mostly reading text, which a 3D lean softens: they lift,
+   catch the light and float their contents, but stay level */
+.js .tile--7.tilt-live,
+.js .tile--8.tilt-live,
+.js .tile--12.tilt-live {
+  transform: none;
+}
+
+/* No scale here: scaling a card blurs its text; the deeper shadow does the lifting */
+.js .tile.tilt-live.is-hovering {
+  box-shadow: 0 0 0 1px var(--ring), var(--shadow-lift);
+  /* follow the pointer closely; settle back slowly on the way out */
+  transition-duration: 250ms, 600ms;
+}
+
+.tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(26rem circle at var(--mx, 50%) var(--my, 0%), var(--sheen), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms var(--ease);
+}
+
+.tile.is-hovering::after {
+  opacity: 1;
+}
+
+/* Light on a photo only washes it out */
+.tile--photo::after {
+  content: none;
+}
+
+.tilt-live .lead__name,
+.tilt-live .lead__actions,
+.tilt-live .project__title,
+.tilt-live .flow {
+  translate: calc(var(--px, 0) * var(--float, 6px)) calc(var(--py, 0) * var(--float, 6px));
+  transition: translate 900ms var(--ease);
+}
+
+.tilt-live.is-hovering .lead__name,
+.tilt-live.is-hovering .lead__actions,
+.tilt-live.is-hovering .project__title,
+.tilt-live.is-hovering .flow,
+.tilt-live.is-hovering .portrait {
+  transition-duration: 250ms;
+}
+
+.tilt-live .lead__name,
+.tilt-live .project__title { --float: 8px; }
+
+/* The photo moves the other way, as if behind the frame. It is scaled up 6%,
+   so a shift of at most 2.5% of itself never shows the frame's edge. */
+.tilt-live .portrait {
+  scale: 1.06;
+  translate: calc(var(--px, 0) * -2.5%) calc(var(--py, 0) * -2.5%);
+  transition: translate 900ms var(--ease), scale 900ms var(--ease);
 }
 
 /* Floating navigation island ---------------------------------------------- */
@@ -92,6 +157,13 @@
   backdrop-filter: saturate(180%) blur(20px);
   box-shadow: 0 0 0 1px var(--ring), var(--shadow-ambient);
   transform: translateX(-50%);
+  transition: box-shadow 600ms var(--ease), background-color 600ms var(--ease);
+}
+
+/* Content is scrolling beneath: the glass rises and thickens */
+.island.is-floating {
+  background-color: var(--glass-strong);
+  box-shadow: 0 0 0 1px var(--ring), var(--shadow-float);
 }
 
 .island__brand {

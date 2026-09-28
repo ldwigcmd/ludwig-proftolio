@@ -1,5 +1,5 @@
 /* ==========================================================================
-   render.js — turns js/data.js into the page
+   render.js — turns js/data.js into the page: a front page of stories
    ========================================================================== */
 
 window.Render = (function () {
@@ -18,6 +18,10 @@ window.Render = (function () {
     return document.getElementById(id);
   }
 
+  function slug(text) {
+    return String(text || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
   // Other sites, PDFs and images open in a new tab so the visitor keeps this page
   function external(href) {
     return /^https?:|\.(pdf|jpe?g|png|webp)$/i.test(href || "") ? ' target="_blank" rel="noopener noreferrer"' : "";
@@ -29,16 +33,44 @@ window.Render = (function () {
     return '<a class="btn btn--' + variant + '" href="' + esc(href) + '"' + external(href) + ">" + esc(label) + ARROW + "</a>";
   }
 
-  // A bezel card: tinted shell, concentric core. `span` is its share of 12 columns.
-  function tile(span, i, inner, coreClass) {
+  // A story's picture: a real video or photo when data.js has one, otherwise
+  // the drawing named by `art` (js/art.js)
+  function picture(item, extraClass) {
+    var inner = item.video
+      ? '<video src="' + esc(item.video) + '"' + (item.thumb ? ' poster="' + esc(item.thumb) + '"' : "") +
+        ' controls preload="metadata" playsinline aria-label="' + esc((item.title || "") + " video demonstration") + '"></video>'
+      : item.thumb
+        ? '<img src="' + esc(item.thumb) + '" alt="" loading="lazy" />'
+        : window.Art ? window.Art.draw(item.art) : "";
+    return inner
+      ? '<div class="story__art' + (extraClass ? " " + extraClass : "") + '"' +
+          (item.art && !item.video && !item.thumb ? ' data-art="' + esc(item.art) + '"' : "") + ">" + inner + "</div>"
+      : "";
+  }
+
+  var COPY_ICONS =
+    '<svg class="email__icon email__icon--copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<rect x="8.5" y="8.5" width="11" height="11" rx="2.5" /><path d="M15.5 5.5v-.5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h.5" /></svg>' +
+    '<svg class="email__icon email__icon--done" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<path d="m5 12.5 4.5 4.5L19 7.5" /></svg>';
+
+  // The address in plain view, with a copy button for visitors without a mail app
+  function emailLine(extraClass) {
+    var email = D.contact && D.contact.email;
+    if (!email) return "";
     return (
-      '<div class="tile tile--' + span + ' reveal" style="--i:' + i + '">' +
-        '<div class="tile__core' + (coreClass ? " " + coreClass : "") + '">' + inner + "</div>" +
+      '<div class="email ' + extraClass + '">' +
+        // <wbr> lets a narrow screen break before the @ rather than mid-word
+        '<a class="email__link" href="mailto:' + esc(email) + '">' + esc(email).replace("@", "<wbr>@") + "</a>" +
+        '<button class="icon-btn email__copy" type="button" data-copy="' + esc(email) + '" aria-label="Copy email address">' +
+          COPY_ICONS +
+        "</button>" +
+        '<span class="sr-only" role="status"></span>' +
       "</div>"
     );
   }
 
-  /* ---- hero -------------------------------------------------------------- */
+  /* ---- hero: the lead story across the full width ------------------------ */
 
   function hero() {
     var host = el("hero");
@@ -47,24 +79,28 @@ window.Render = (function () {
 
     var secondary = (p.links || []).filter(function (l) { return l.href.indexOf("mailto:") !== 0; });
 
-    host.innerHTML =
-      tile(8, 0,
-        '<h1 class="hero__name" id="hero-name">' + esc(p.name) + "</h1>" +
-        '<p class="hero__role">' + esc(p.role) + "</p>" +
-        (p.tagline ? '<p class="hero__tagline">' + esc(p.tagline) + "</p>" : "") +
-        '<div class="hero__actions">' +
-          button("Get in touch", "#contact", "primary") +
-          secondary.map(function (l) { return button(l.label, l.href, "secondary"); }).join("") +
-        "</div>",
-        "hero__core") +
-      // The photo is the card's core itself, so it runs edge to edge inside the bezel
-      '<div class="tile tile--4 reveal" style="--i:1">' +
-        '<img class="tile__core portrait" src="' + esc(p.avatar) + '" alt="' + esc(p.avatarAlt || p.name) +
-          '" width="800" height="1000" fetchpriority="high" />' +
+    var lead =
+      '<div class="tile tile--12 tile--photo story story--lead reveal" style="--i:0">' +
+        '<div class="story__photo portrait-frame">' +
+          '<img class="portrait" src="' + esc(p.avatar) + '" alt="' + esc(p.avatarAlt || p.name) +
+            '" width="800" height="1000" fetchpriority="high" />' +
+        "</div>" +
+        '<div class="story__body lead">' +
+          '<h1 class="lead__name" id="hero-name">' + esc(p.name) + "</h1>" +
+          '<p class="lead__role">' + esc(p.role) + "</p>" +
+          (p.tagline ? '<p class="lead__tagline">' + esc(p.tagline) + "</p>" : "") +
+          '<div class="lead__actions">' +
+            button("Get in touch", "#contact", "primary") +
+            secondary.map(function (l) { return button(l.label, l.href, "secondary"); }).join("") +
+          "</div>" +
+          emailLine("lead__email") +
+        "</div>" +
       "</div>";
+
+    host.innerHTML = lead;
   }
 
-  /* ---- about + quick facts ----------------------------------------------- */
+  /* ---- about: the description in one box, the quick facts in another ----- */
 
   function about() {
     var host = el("about-grid");
@@ -79,43 +115,45 @@ window.Render = (function () {
     ].filter(Boolean);
 
     host.innerHTML =
-      tile(7, 0,
-        '<div class="about__text">' +
+      '<div class="tile tile--7 story reveal">' +
+        '<div class="story__body about__text">' +
           (D.about || []).map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") +
-        "</div>") +
-      tile(5, 1,
-        '<dl class="facts">' +
+        "</div>" +
+      "</div>" +
+      '<div class="tile tile--5 story reveal" style="--i:1">' +
+        '<dl class="story__body facts">' +
           facts.map(function (f) { return "<div><dt>" + esc(f[0]) + "</dt><dd>" + esc(f[1]) + "</dd></div>"; }).join("") +
-        "</dl>");
+        "</dl>" +
+      "</div>";
   }
 
-  /* ---- experience -------------------------------------------------------- */
+  /* ---- experience: one wide story per job --------------------------------- */
 
   function experience() {
     var host = el("experience-grid");
     if (!host || !D.experience) return;
 
-    host.innerHTML = tile(12, 0,
-      D.experience
-        .map(function (job) {
-          var points = (job.highlights || []).map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
-          return (
-            '<article class="job">' +
-              '<p class="job__when">' + esc(job.period) + "</p>" +
-              "<div>" +
-                '<h3 class="card__title">' + esc(job.role) + "</h3>" +
-                '<p class="card__sub">' + esc(job.company) + "</p>" +
-                (points ? '<ul class="card__points">' + points + "</ul>" : "") +
-                (job.tech && job.tech.length ? '<p class="card__meta">' + esc(job.tech.join(", ")) + "</p>" : "") +
-              "</div>" +
-            "</article>"
-          );
-        })
-        .join(""));
+    host.innerHTML = D.experience
+      .map(function (job, i) {
+        var points = (job.highlights || []).map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
+        return (
+          '<article class="tile tile--12 story story--wide reveal" style="--i:' + i + '">' +
+            picture({ art: job.art }) +
+            '<div class="story__body">' +
+              '<h3 class="story__title">' + esc(job.role) + "</h3>" +
+              '<p class="story__sub">' + esc(job.company) + "</p>" +
+              '<p class="story__meta">' + esc(job.period) + "</p>" +
+              (points ? '<ul class="story__points">' + points + "</ul>" : "") +
+              (job.tech && job.tech.length ? '<p class="story__tech">' + esc(job.tech.join(", ")) + "</p>" : "") +
+            "</div>" +
+          "</article>"
+        );
+      })
+      .join("");
   }
 
   /* ---- projects ----------------------------------------------------------
-     A card links out when it has a url, plays its own video when it has one,
+     A story links out when it has a url, plays its own video when it has one,
      and otherwise says what is coming instead of linking nowhere. */
 
   var KIND = {
@@ -125,7 +163,27 @@ window.Render = (function () {
     "case study": { cta: "Read case study", soon: "Case study coming soon" }
   };
 
-  var PROJECT_SPANS = [6, 6];
+  // The system drawn as parts wired top to bottom, from the project's `flow`
+  function flow(p) {
+    if (!p.flow || !p.flow.length) return "";
+    return (
+      '<ol class="flow" aria-label="' + esc("How " + p.title + " is wired") + '">' +
+        p.flow
+          .map(function (n, i) {
+            var last = i === p.flow.length - 1;
+            return (
+              '<li class="flow__node' + (n.hub ? " flow__node--hub" : "") + '" style="--n:' + i + '">' +
+                (n.via ? '<span class="flow__via">' + esc(n.via) + "</span>" : "") +
+                '<span class="flow__part">' + esc(n.part) + "</span>" +
+                (n.note ? '<span class="flow__note">' + esc(n.note) + "</span>" : "") +
+                (last ? "" : '<span class="flow__pulse" aria-hidden="true"></span>') +
+              "</li>"
+            );
+          })
+          .join("") +
+      "</ol>"
+    );
+  }
 
   function projects() {
     var host = el("projects-grid");
@@ -134,45 +192,47 @@ window.Render = (function () {
     host.innerHTML = D.projects
       .map(function (p, i) {
         var kind = KIND[p.kind] || { cta: "Open project", soon: "Link coming soon" };
-
-        var media = p.video
-          ? '<video class="project__media" src="' + esc(p.video) + '"' + (p.thumb ? ' poster="' + esc(p.thumb) + '"' : "") +
-            ' controls preload="metadata" playsinline aria-label="' + esc(p.title + " video demonstration") + '"></video>'
-          : p.thumb
-            ? '<img class="project__media" src="' + esc(p.thumb) + '" alt="" loading="lazy" width="800" height="500" />'
-            : "";
-
         var foot = p.url
-          ? button(kind.cta, p.url, "secondary")
-          : p.video ? "" : '<p class="card__soon">' + esc(kind.soon) + "</p>";
+          ? button(kind.cta, p.url, "primary")
+          : p.video ? "" : '<p class="story__soon">' + esc(kind.soon) + "</p>";
 
-        return tile(PROJECT_SPANS[i % PROJECT_SPANS.length], i,
-          media +
-          '<h3 class="card__title">' + esc(p.title) + "</h3>" +
-          (p.subtitle ? '<p class="card__sub">' + esc(p.subtitle) + "</p>" : "") +
-          '<p class="card__desc">' + esc(p.description) + "</p>" +
-          '<p class="card__meta">' + esc([p.role, p.year].filter(Boolean).join(", ")) + "</p>" +
-          (p.tech && p.tech.length ? '<p class="card__tech">' + esc(p.tech.join(", ")) + "</p>" : "") +
-          (foot ? '<div class="card__foot">' + foot + "</div>" : ""),
-          "stack");
+        return (
+          '<article class="tile tile--12 story story--project reveal" id="project-' + slug(p.title) + '" style="--i:' + i + '">' +
+            picture(p, "story__art--banner") +
+            '<div class="story__body project">' +
+              '<div class="project__text">' +
+                '<h3 class="project__title">' + esc(p.title) + "</h3>" +
+                (p.subtitle ? '<p class="story__sub">' + esc(p.subtitle) + "</p>" : "") +
+                '<p class="story__meta">' + esc([p.role, p.year].filter(Boolean).join(", ")) + "</p>" +
+                '<p class="story__desc">' + esc(p.description) + "</p>" +
+                (p.tech && p.tech.length ? '<p class="story__tech">' + esc(p.tech.join(", ")) + "</p>" : "") +
+                (foot ? '<div class="story__foot">' + foot + "</div>" : "") +
+              "</div>" +
+              flow(p) +
+            "</div>" +
+          "</article>"
+        );
       })
       .join("");
   }
 
-  /* ---- skills ------------------------------------------------------------ */
+  /* ---- skills: a box per group ------------------------------------------- */
+  // The tools are the line; the group name sits under them like a story's date
 
-  // One card, one row per group: short groups no longer float in half-empty cards
   function skills() {
     var host = el("skills-grid");
     if (!host || !D.skills) return;
-    host.innerHTML = tile(12, 0,
-      '<dl class="skills">' +
-        D.skills
-          .map(function (g) {
-            return "<div><dt>" + esc(g.title) + "</dt><dd>" + esc((g.items || []).join(", ")) + "</dd></div>";
-          })
-          .join("") +
-      "</dl>");
+    host.innerHTML = D.skills
+      .map(function (g, i) {
+        return (
+          '<div class="tile tile--4 story skill reveal" style="--i:' + (i % 3) + '">' +
+            (window.Art ? window.Art.icon(g.icon) : "") +
+            '<p class="skill__items">' + esc((g.items || []).join(", ")) + "</p>" +
+            '<p class="skill__group">' + esc(g.title) + "</p>" +
+          "</div>"
+        );
+      })
+      .join("");
   }
 
   /* ---- education + certificates ------------------------------------------ */
@@ -182,12 +242,17 @@ window.Render = (function () {
     if (!host) return;
 
     var schools = (D.education || [])
-      .map(function (e) {
+      .map(function (e, i) {
         return (
-          '<h3 class="card__title">' + esc(e.school) + "</h3>" +
-          '<p class="card__sub">' + esc(e.degree) + "</p>" +
-          '<p class="card__meta">' + esc(e.period) + "</p>" +
-          (e.detail ? '<p class="card__desc">' + esc(e.detail) + "</p>" : "")
+          '<article class="tile tile--7 story reveal" style="--i:' + i + '">' +
+            picture({ art: e.art }) +
+            '<div class="story__body">' +
+              '<h3 class="story__title">' + esc(e.school) + "</h3>" +
+              '<p class="story__sub">' + esc(e.degree) + "</p>" +
+              '<p class="story__meta">' + esc(e.period) + "</p>" +
+              (e.detail ? '<p class="story__desc">' + esc(e.detail) + "</p>" : "") +
+            "</div>" +
+          "</article>"
         );
       })
       .join("");
@@ -205,8 +270,14 @@ window.Render = (function () {
       .join("");
 
     host.innerHTML =
-      tile(5, 0, schools) +
-      tile(7, 1, '<h3 class="card__title">Certificates</h3><ul class="certs">' + certs + "</ul>");
+      schools +
+      '<article class="tile tile--5 story reveal" style="--i:1">' +
+        picture({ art: "certificate" }, "story__art--banner") +
+        '<div class="story__body">' +
+          '<h3 class="story__title">Certificates</h3>' +
+          '<ul class="certs">' + certs + "</ul>" +
+        "</div>" +
+      "</article>";
   }
 
   /* ---- contact + footer -------------------------------------------------- */
@@ -215,9 +286,14 @@ window.Render = (function () {
     var blurb = el("contact-blurb");
     if (blurb && D.contact) blurb.textContent = D.contact.blurb || "";
 
+    var email = el("contact-email");
+    if (email) email.innerHTML = emailLine("contact__email");
+
+    // The address is already on show, so only the other links become buttons
     var links = el("contact-links");
     if (links && D.profile && D.profile.links) {
       links.innerHTML = D.profile.links
+        .filter(function (l) { return l.href.indexOf("mailto:") !== 0; })
         .map(function (l) { return "<li>" + button(l.label, l.href, "secondary") + "</li>"; })
         .join("");
     }

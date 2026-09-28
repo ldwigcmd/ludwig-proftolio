@@ -1,7 +1,7 @@
 /* ==========================================================================
    tokens.css — the design system
-   Apple-style: light gray canvas, white cards in soft bezels, one blue.
-   One typeface (Geist) everywhere; hierarchy comes from size and weight.
+   Apple Newsroom: a light gray front page of story tiles, each story owning
+   one Apple system colour for its drawn picture. One typeface (Geist).
    Light is the default. Dark is applied via [data-theme="dark"] on <html>.
    ========================================================================== */
 
@@ -11,10 +11,11 @@
   /* ---- Type: one family ------------------------------------------------ */
   --font: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
 
-  --fs-display: clamp(2.75rem, 1.6rem + 4.4vw, 5rem);
-  --fs-h2:      clamp(2.25rem, 1.5rem + 3vw, 4rem);
-  --fs-h3:      clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
-  --fs-lead:    clamp(1.125rem, 1.03rem + 0.4vw, 1.3125rem);
+  --fs-display: clamp(2.5rem, 1.5rem + 2.6vw, 3.75rem);   /* the name */
+  --fs-h2:      clamp(2rem, 1.4rem + 2vw, 3rem);           /* section headings */
+  --fs-product: clamp(2rem, 1.4rem + 2.2vw, 3.25rem);      /* project names */
+  --fs-h3:      clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);     /* story titles */
+  --fs-lead:    clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   --fs-body:    1.0625rem;
   --fs-small:   0.9375rem;
   --fs-micro:   0.8125rem;
@@ -22,31 +23,26 @@
   --tracking-tight: -0.035em;
   --tracking-snug:  -0.02em;
 
-  /* ---- Space ----------------------------------------------------------- */
+  /* ---- Space: tight front-page rhythm ----------------------------------- */
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
-  --space-xl: 2.5rem;
-  --space-2xl: 4rem;
+  --space-xl: 2.25rem;
+  --space-2xl: 3rem;
 
-  --section-pad: clamp(6rem, 4rem + 6vw, 10rem);
+  --section-pad: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
   --container: 1120px;
   --gutter: clamp(1rem, 0.5rem + 2vw, 2rem);
-  --bento-gap: clamp(0.75rem, 0.5rem + 0.8vw, 1.25rem);
+  --grid-gap: 14px;
 
-  /* ---- Bezel: outer shell, then a concentric inner core ------------------ */
-  --radius-shell: 2rem;
-  --bezel: 6px;
-  --radius-core: 26px;   /* concentric: 2rem shell minus the 6px bezel */
-  --radius-field: 14px;
+  --radius-tile: 22px;
+  --radius-field: 12px;
 
   /* ---- Colour (light) -------------------------------------------------- */
   --canvas:         #f5f5f7;
   --core:           #ffffff;
-  --shell:          rgba(0, 0, 0, 0.035);
   --ring:           rgba(0, 0, 0, 0.05);
-  --highlight:      rgba(255, 255, 255, 0.9);
   --text:           #1d1d1f;
   --text-secondary: #515154;
   --text-tertiary:  #6e6e73;
@@ -61,7 +57,18 @@
   --glass:          rgba(255, 255, 255, 0.72);
   --glass-strong:   rgba(245, 245, 247, 0.86);
 
-  --shadow-ambient: 0 24px 60px -32px rgba(0, 0, 0, 0.14), 0 2px 8px -4px rgba(0, 0, 0, 0.04);
+  /* ---- Story colours: one Apple system colour per story's picture ------ */
+  --c-water:   #0a7cc4;   /* WetWare */
+  --c-orange:  #ff9f0a;   /* BraiLingo */
+  --c-green:   #30b85a;   /* internship */
+  --c-indigo:  #5e5ce6;   /* degree */
+  --c-yellow:  #ffcc00;   /* certificates */
+  --c-contact: #0066cc;   /* the contact field; white text clears 5.5:1 */
+
+  --shadow-ambient: 0 18px 40px -26px rgba(0, 0, 0, 0.18), 0 2px 6px -3px rgba(0, 0, 0, 0.05);
+  --shadow-lift:    0 36px 64px -30px rgba(0, 0, 0, 0.28), 0 8px 20px -10px rgba(0, 0, 0, 0.08);
+  --shadow-float:   0 18px 40px -18px rgba(0, 0, 0, 0.22), 0 2px 8px -4px rgba(0, 0, 0, 0.06);
+  --sheen:          rgba(255, 255, 255, 0);  /* light caught by a tilted card: none shows on white */
 
   /* ---- Motion: spring-like, never linear ------------------------------- */
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
@@ -74,9 +81,7 @@
 
   --canvas:         #000000;
   --core:           #1c1c1e;
-  --shell:          rgba(255, 255, 255, 0.05);
   --ring:           rgba(255, 255, 255, 0.08);
-  --highlight:      rgba(255, 255, 255, 0.08);
   --text:           #f5f5f7;
   --text-secondary: #c7c7cc;
   --text-tertiary:  #a1a1a6;
@@ -88,5 +93,23 @@
   --glass:          rgba(28, 28, 30, 0.72);
   --glass-strong:   rgba(0, 0, 0, 0.82);
 
-  --shadow-ambient: 0 24px 60px -32px rgba(0, 0, 0, 0.6);
+  --shadow-ambient: 0 18px 40px -24px rgba(0, 0, 0, 0.7);
+  --shadow-lift:    0 36px 64px -26px rgba(0, 0, 0, 0.9);
+  --shadow-float:   0 18px 40px -16px rgba(0, 0, 0, 0.8);
+  --sheen:          rgba(255, 255, 255, 0.07);
+}
+
+/* ---- The contact field: white type on Apple blue, both themes ----------- */
+.field-blue {
+  --text:           #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.92);
+  --text-tertiary:  rgba(255, 255, 255, 0.92);
+  --fill:           rgba(255, 255, 255, 0.14);
+  --fill-strong:    rgba(255, 255, 255, 0.22);
+  --accent:         #ffffff;
+  --accent-soft:    rgba(255, 255, 255, 0.3);
+  --error:          #ffffff;
+  --sheen:          rgba(255, 255, 255, 0);
+  background-color: var(--c-contact);
+  color: var(--text-secondary);
 }
