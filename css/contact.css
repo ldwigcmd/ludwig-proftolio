@@ -39,10 +39,6 @@
   letter-spacing: var(--tracking-snug);
 }
 
-.field-blue .email__link:hover {
-  text-decoration: underline;
-}
-
 .field-blue .icon-btn:hover {
   background-color: var(--fill-strong);
 }

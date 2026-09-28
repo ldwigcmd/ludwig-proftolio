@@ -14,6 +14,25 @@
 
 .story__art--banner { aspect-ratio: 9 / 4; }
 
+/* A logo is shown whole, centred, with room around it on a light field */
+.story__art--logo {
+  background-color: #ffffff;
+  box-shadow: inset 0 -1px 0 var(--ring);
+}
+
+/* Pinned inside the frame with a margin, so any logo shape fits whole */
+.story__art.story__art--logo > img {
+  position: absolute;
+  inset: 1.25rem;
+  width: calc(100% - 2.5rem);
+  height: calc(100% - 2.5rem);
+  object-fit: contain;
+}
+
+.tile:hover .story__art--logo > img {
+  scale: 1.04;
+}
+
 /* Each drawing's own colour fills any space its frame adds around it */
 .story__art[data-art="wetware"]     { background-color: var(--c-water); }
 .story__art[data-art="brailingo"]   { background-color: var(--c-orange); }
@@ -392,6 +411,16 @@ a.tile:focus-visible {
   background-color: var(--core);
 }
 
+/* Hovering a part lights its pin */
+.flow__node::before {
+  transition: scale 350ms var(--ease), border-color 350ms var(--ease), background-color 350ms var(--ease);
+}
+
+.flow__node:hover::before {
+  scale: 1.35;
+  border-color: var(--accent);
+}
+
 /* The controller at the centre of the system: a solid blue pin */
 .flow__node--hub::before {
   border-color: var(--accent);
@@ -513,6 +542,12 @@ a.tile:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .skill:hover .glyph,
+  .flow__node:hover::before {
+    scale: none;
+    rotate: none;
+  }
+
   .is-in .flow__pulse,
   .is-in:hover .flow__pulse,
   .art__drift,
@@ -542,6 +577,7 @@ a.tile:focus-visible {
 .skill:nth-child(6) { --badge: #8e8e93; }
 
 .skill .glyph {
+  transition: scale 500ms var(--ease), rotate 500ms var(--ease);
   width: 30px;
   height: 30px;
   margin-bottom: var(--space-sm);
@@ -551,6 +587,12 @@ a.tile:focus-visible {
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* The group's glyph springs up when its box is hovered */
+.skill:hover .glyph {
+  scale: 1.18;
+  rotate: -8deg;
 }
 
 .skill__items {

@@ -100,6 +100,7 @@ window.PORTFOLIO = {
       degree: "Bachelor of Science in Computer Engineering",
       period: "2022–2026",
       detail: "Formerly Don Honorio Ventura State University.",
+      logo: "assets/img/psu-logo.jpg",
       art: "degree"
     }
   ],

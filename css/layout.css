@@ -111,16 +111,18 @@ a.tile:hover {
   content: none;
 }
 
-.tilt-live .lead__name,
-.tilt-live .lead__actions,
+.js .tilt-live .lead__name,
+.js .tilt-live .lead__actions,
+.js .section--hero .tilt-live .lead__name,
+.js .section--hero .tilt-live .lead__actions,
 .tilt-live .project__title,
 .tilt-live .flow {
   translate: calc(var(--px, 0) * var(--float, 6px)) calc(var(--py, 0) * var(--float, 6px));
   transition: translate 900ms var(--ease);
 }
 
-.tilt-live.is-hovering .lead__name,
-.tilt-live.is-hovering .lead__actions,
+.js .section--hero .tilt-live.is-hovering .lead__name,
+.js .section--hero .tilt-live.is-hovering .lead__actions,
 .tilt-live.is-hovering .project__title,
 .tilt-live.is-hovering .flow,
 .tilt-live.is-hovering .portrait {
@@ -160,6 +162,33 @@ a.tile:hover {
   transition: box-shadow 600ms var(--ease), background-color 600ms var(--ease);
 }
 
+/* The sun turns and the moon rocks when the toggle is hovered */
+.theme-toggle:hover .theme-toggle__icon--sun  { rotate: 45deg; }
+.theme-toggle:hover .theme-toggle__icon--moon { rotate: -18deg; }
+
+/* A hairline along the island's lower edge fills as the page is read.
+   Scroll-driven where the browser supports it; absent elsewhere. */
+@supports (animation-timeline: scroll()) {
+  .island::after {
+    content: "";
+    position: absolute;
+    right: 1.5rem;
+    bottom: 0;
+    left: 1.5rem;
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--accent);
+    transform-origin: left center;
+    animation: read-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  @keyframes read-progress {
+    from { scale: 0 1; }
+    to   { scale: 1 1; }
+  }
+}
+
 /* Content is scrolling beneath: the glass rises and thickens */
 .island.is-floating {
   background-color: var(--glass-strong);
@@ -194,6 +223,7 @@ a.tile:hover {
 }
 
 .island__link:hover {
+  background-color: var(--fill);
   color: var(--text);
   text-decoration: none;
 }
@@ -225,6 +255,7 @@ a.tile:hover {
 }
 
 .theme-toggle__icon {
+  transition: rotate 600ms var(--ease);
   position: absolute;
   width: 18px;
   height: 18px;

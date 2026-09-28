@@ -8,10 +8,9 @@ window.Depth = (function () {
   function tilt(tile) {
     var frame = 0;
 
-    // Start only after the card's fade-up has finished, so the two never fight.
-    // Only first-screen stories fade in (base.css); the rest start live.
+    // Start only after the card's fade-up has finished, so the two never fight
     function goLive() { tile.classList.add("tilt-live"); }
-    if (!tile.classList.contains("reveal") || !tile.closest(".section--hero")) {
+    if (!tile.classList.contains("reveal")) {
       goLive();
     } else {
       tile.addEventListener("transitionend", function done(e) {

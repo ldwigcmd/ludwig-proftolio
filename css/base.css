@@ -86,30 +86,72 @@ strong {
   top: 12px;
 }
 
-/* Scroll entry: only when JS is running, so the page is readable without it */
-
-/* First screen only: the lead story and its two projects settle in once on
-   load. Everywhere else the page is simply there, so the drawn pictures'
-   own motion (Braille dots, water, wiring pulse) is what moves.
+/* Scroll entry: only when JS is running, so the page is readable without it.
+   Headings and stories rise a little as they arrive, neighbours one after
+   another. The first screen also sharpens from a soft blur, once, on load.
    `translate` rather than `transform`, which the pointer tilt owns (depth.js) */
-.js .section--hero .reveal {
+
+.js .reveal {
   opacity: 0;
+  translate: 0 1.5rem;
+  transition: opacity 800ms var(--ease), translate 800ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+.js .reveal.is-in {
+  opacity: 1;
+  translate: none;
+}
+
+.js .section--hero .reveal {
   translate: 0 2rem;
   filter: blur(8px);
   transition: opacity 900ms var(--ease), translate 900ms var(--ease), filter 900ms var(--ease);
-  transition-delay: calc(var(--i, 0) * 80ms);
 }
 
 .js .section--hero .reveal.is-in {
-  opacity: 1;
-  translate: none;
   filter: none;
 }
 
+/* Inside the lead story the person arrives line by line after the card */
+.js .section--hero .lead > * {
+  opacity: 0;
+  translate: 0 0.75rem;
+  transition: opacity 700ms var(--ease), translate 700ms var(--ease);
+}
+
+.js .section--hero .is-in .lead > * {
+  opacity: 1;
+  translate: none;
+}
+
+.js .section--hero .is-in .lead > :nth-child(1) { transition-delay: 250ms; }
+.js .section--hero .is-in .lead > :nth-child(2) { transition-delay: 350ms; }
+.js .section--hero .is-in .lead > :nth-child(3) { transition-delay: 430ms; }
+.js .section--hero .is-in .lead > :nth-child(4) { transition-delay: 510ms; }
+.js .section--hero .is-in .lead > :nth-child(5) { transition-delay: 590ms; }
+
+/* Links that read as text draw their underline in from the left on hover */
+.draw-link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 450ms var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.draw-link:hover {
+  text-decoration: none;
+  background-size: 100% 1px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .js .section--hero .reveal {
+  .js .reveal,
+  .js .section--hero .reveal,
+  .js .section--hero .lead > * {
     opacity: 1;
     translate: none;
     filter: none;
+    transition: none;
   }
 }

@@ -61,7 +61,7 @@ window.Render = (function () {
     return (
       '<div class="email ' + extraClass + '">' +
         // <wbr> lets a narrow screen break before the @ rather than mid-word
-        '<a class="email__link" href="mailto:' + esc(email) + '">' + esc(email).replace("@", "<wbr>@") + "</a>" +
+        '<a class="email__link draw-link" href="mailto:' + esc(email) + '">' + esc(email).replace("@", "<wbr>@") + "</a>" +
         '<button class="icon-btn email__copy" type="button" data-copy="' + esc(email) + '" aria-label="Copy email address">' +
           COPY_ICONS +
         "</button>" +
@@ -245,7 +245,10 @@ window.Render = (function () {
       .map(function (e, i) {
         return (
           '<article class="tile tile--7 story reveal" style="--i:' + i + '">' +
-            picture({ art: e.art }) +
+            (e.logo
+              // A school logo sits whole and centred on a light field, never cropped
+              ? '<div class="story__art story__art--logo"><img src="' + esc(e.logo) + '" alt="' + esc(e.school + " logo") + '" loading="lazy" /></div>'
+              : picture({ art: e.art })) +
             '<div class="story__body">' +
               '<h3 class="story__title">' + esc(e.school) + "</h3>" +
               '<p class="story__sub">' + esc(e.degree) + "</p>" +
@@ -263,7 +266,7 @@ window.Render = (function () {
           "<li>" +
             '<p class="cert__name">' + esc(c.name) + "</p>" +
             '<p class="cert__issuer">' + esc(c.issuer) + (c.year ? ", " + esc(c.year) : "") + "</p>" +
-            (c.url ? '<a class="cert__view" href="' + esc(c.url) + '"' + external(c.url) + ">View certificate</a>" : "") +
+            (c.url ? '<a class="cert__view draw-link" href="' + esc(c.url) + '"' + external(c.url) + ">View certificate</a>" : "") +
           "</li>"
         );
       })
