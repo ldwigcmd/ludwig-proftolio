@@ -33,13 +33,32 @@ window.Render = (function () {
     return '<a class="btn btn--' + variant + '" href="' + esc(href) + '"' + external(href) + ">" + esc(label) + ARROW + "</a>";
   }
 
+  // The video id from a YouTube link (youtu.be/ID, watch?v=ID, shorts/ID, embed/ID)
+  function youtubeId(href) {
+    var m = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/))([\w-]{11})/.exec(href || "");
+    return m ? m[1] : "";
+  }
+
+  // A video that plays right in the story: a YouTube link becomes YouTube's
+  // player, anything else is a video file served from this site
+  function player(item) {
+    var label = (item.title || "") + " video demonstration";
+    var yt = youtubeId(item.video);
+    return yt
+      ? '<iframe src="https://www.youtube-nocookie.com/embed/' + yt + '?rel=0" title="' + esc(label) + '"' +
+        ' loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>'
+      // Without a poster image, "#t=0.5" makes the browser show a frame from the
+      // video itself instead of a black box before it plays
+      : '<video src="' + esc(item.video) + (item.thumb || /#t=/.test(item.video) ? "" : "#t=0.5") + '"' +
+        (item.thumb ? ' poster="' + esc(item.thumb) + '"' : "") +
+        ' controls preload="metadata" playsinline aria-label="' + esc(label) + '"></video>';
+  }
+
   // A story's picture: a real video or photo when data.js has one, otherwise
   // the drawing named by `art` (js/art.js)
   function picture(item, extraClass) {
-    var inner = item.video
-      ? '<video src="' + esc(item.video) + '"' + (item.thumb ? ' poster="' + esc(item.thumb) + '"' : "") +
-        ' controls preload="metadata" playsinline aria-label="' + esc((item.title || "") + " video demonstration") + '"></video>'
-      : item.thumb
+    if (item.video) return '<div class="story__art story__art--video">' + player(item) + "</div>";
+    var inner = item.thumb
         ? '<img src="' + esc(item.thumb) + '" alt="" loading="lazy" />'
         : window.Art ? window.Art.draw(item.art) : "";
     return inner

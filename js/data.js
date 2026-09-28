@@ -73,8 +73,10 @@ window.PORTFOLIO = {
         "Braille quizzes.",
       art: "brailingo",
       thumb: "",
-      url: "https://youtu.be/tp2VrH9mEes",
-      video: "",
+      url: "",
+      // Plays right on the page. A YouTube link uses YouTube's player; to serve
+      // the file from this site instead, use e.g. "assets/video/brailingo-demo.mp4".
+      video: "assets/video/brailingo-demo.mp4",  // backup copy: https://youtu.be/tp2VrH9mEes
       tech: ["Raspberry Pi 4B", "Flutter", "PCF8575 I2C", "PWM solenoids", "TCP"],
       flow: [
         { part: "Flutter app", note: "Android, spaced-repetition quizzes" },
