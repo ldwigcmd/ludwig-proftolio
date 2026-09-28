@@ -1,0 +1,92 @@
+/* ==========================================================================
+   tokens.css — the design system
+   Apple-style: light gray canvas, white cards in soft bezels, one blue.
+   One typeface (Geist) everywhere; hierarchy comes from size and weight.
+   Light is the default. Dark is applied via [data-theme="dark"] on <html>.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Type: one family ------------------------------------------------ */
+  --font: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+
+  --fs-display: clamp(2.75rem, 1.6rem + 4.4vw, 5rem);
+  --fs-h2:      clamp(2.25rem, 1.5rem + 3vw, 4rem);
+  --fs-h3:      clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  --fs-lead:    clamp(1.125rem, 1.03rem + 0.4vw, 1.3125rem);
+  --fs-body:    1.0625rem;
+  --fs-small:   0.9375rem;
+  --fs-micro:   0.8125rem;
+
+  --tracking-tight: -0.035em;
+  --tracking-snug:  -0.02em;
+
+  /* ---- Space ----------------------------------------------------------- */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+
+  --section-pad: clamp(6rem, 4rem + 6vw, 10rem);
+  --container: 1120px;
+  --gutter: clamp(1rem, 0.5rem + 2vw, 2rem);
+  --bento-gap: clamp(0.75rem, 0.5rem + 0.8vw, 1.25rem);
+
+  /* ---- Bezel: outer shell, then a concentric inner core ------------------ */
+  --radius-shell: 2rem;
+  --bezel: 6px;
+  --radius-core: 26px;   /* concentric: 2rem shell minus the 6px bezel */
+  --radius-field: 14px;
+
+  /* ---- Colour (light) -------------------------------------------------- */
+  --canvas:         #f5f5f7;
+  --core:           #ffffff;
+  --shell:          rgba(0, 0, 0, 0.035);
+  --ring:           rgba(0, 0, 0, 0.05);
+  --highlight:      rgba(255, 255, 255, 0.9);
+  --text:           #1d1d1f;
+  --text-secondary: #515154;
+  --text-tertiary:  #6e6e73;
+  --fill:           rgba(0, 0, 0, 0.05);
+  --fill-strong:    rgba(0, 0, 0, 0.08);
+  --accent:         #0071e3;   /* links and focus */
+  --accent-soft:    rgba(0, 113, 227, 0.14);
+  --button:         #0071e3;   /* filled buttons, white text clears 4.5:1 in both themes */
+  --button-hover:   #0062c4;   /* darker on hover so white text keeps 4.5:1 */
+  --on-accent:      #ffffff;
+  --error:          #d70015;
+  --glass:          rgba(255, 255, 255, 0.72);
+  --glass-strong:   rgba(245, 245, 247, 0.86);
+
+  --shadow-ambient: 0 24px 60px -32px rgba(0, 0, 0, 0.14), 0 2px 8px -4px rgba(0, 0, 0, 0.04);
+
+  /* ---- Motion: spring-like, never linear ------------------------------- */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur: 700ms;
+  --dur-fast: 300ms;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas:         #000000;
+  --core:           #1c1c1e;
+  --shell:          rgba(255, 255, 255, 0.05);
+  --ring:           rgba(255, 255, 255, 0.08);
+  --highlight:      rgba(255, 255, 255, 0.08);
+  --text:           #f5f5f7;
+  --text-secondary: #c7c7cc;
+  --text-tertiary:  #a1a1a6;
+  --fill:           rgba(255, 255, 255, 0.08);
+  --fill-strong:    rgba(255, 255, 255, 0.12);
+  --accent:         #2997ff;
+  --accent-soft:    rgba(41, 151, 255, 0.2);
+  --error:          #ff6961;
+  --glass:          rgba(28, 28, 30, 0.72);
+  --glass-strong:   rgba(0, 0, 0, 0.82);
+
+  --shadow-ambient: 0 24px 60px -32px rgba(0, 0, 0, 0.6);
+}

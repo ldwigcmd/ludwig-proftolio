@@ -1,0 +1,260 @@
+/* ==========================================================================
+   sections.css — what sits inside the cards
+   ========================================================================== */
+
+/* Hero --------------------------------------------------------------------- */
+
+.hero__core {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(26rem, 20rem + 18vw, 36rem);
+}
+
+.hero__name {
+  font-size: var(--fs-display);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
+}
+
+.hero__role {
+  margin-top: var(--space-md);
+  color: var(--text);
+  font-size: var(--fs-lead);
+  font-weight: 500;
+}
+
+.hero__tagline {
+  max-width: 34rem;
+  margin-top: var(--space-xs);
+  font-size: var(--fs-lead);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}
+
+/* The portrait is itself the card's core, filling the bezel edge to edge */
+.portrait {
+  padding: 0;
+  width: 100%;
+  height: auto;
+  min-height: 22rem;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+/* Phones: photo first and shorter, so photo and name share the first screen */
+@media (max-width: 767px) {
+  .hero__core {
+    min-height: 0;
+  }
+
+  #hero > .tile:last-child {
+    order: -1;
+  }
+
+  .portrait {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+    object-position: 50% 22%;
+  }
+}
+
+/* About -------------------------------------------------------------------- */
+
+.about__text p {
+  max-width: 38rem;
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+}
+
+.about__text p + p {
+  margin-top: var(--space-md);
+}
+
+.facts {
+  display: grid;
+  gap: var(--space-lg);
+  margin: 0;
+}
+
+.facts dt {
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.facts dd {
+  margin: 0.15rem 0 0;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Shared card text ---------------------------------------------------------- */
+
+.card__title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--tracking-snug);
+}
+
+.card__sub {
+  margin-top: 0.3rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.card__desc {
+  margin-top: var(--space-md);
+  max-width: 40rem;
+}
+
+.card__meta {
+  margin-top: var(--space-md);
+  font-size: var(--fs-small);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.card__tech {
+  margin-top: 0.3rem;
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+}
+
+.card__foot {
+  margin-top: auto;
+  padding-top: var(--space-xl);
+}
+
+.card__soon {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.card__points {
+  margin-top: var(--space-md);
+  padding-left: 1.1rem;
+  max-width: 44rem;
+}
+
+.card__points li + li {
+  margin-top: 0.4rem;
+}
+
+.card__points li::marker {
+  color: var(--text-tertiary);
+}
+
+/* Cards that stack their content and pin the footer to the bottom */
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Experience: dates on the left inside the card ---------------------------- */
+
+.job {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  column-gap: var(--space-xl);
+}
+
+.job + .job {
+  margin-top: var(--space-xl);
+}
+
+.job__when {
+  padding-top: 0.35rem;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .job {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-xs);
+  }
+}
+
+/* Projects ----------------------------------------------------------------- */
+
+.project__media {
+  width: 100%;
+  margin-bottom: var(--space-lg);
+  border-radius: var(--radius-field);
+  background-color: var(--canvas);
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+/* Skills: one card, a row per group ---------------------------------------- */
+
+.skills {
+  display: grid;
+  gap: var(--space-lg);
+  margin: 0;
+}
+
+.skills div {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: 0.25rem var(--space-xl);
+}
+
+.skills dt {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.skills dd {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .skills div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Certificates ------------------------------------------------------------- */
+
+.certs {
+  display: grid;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+  /* Fixed height: two certificates fit, more scroll inside the card */
+  max-height: 14rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: var(--space-sm);
+}
+
+.cert__name {
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.cert__issuer {
+  margin-top: 0.15rem;
+  font-size: var(--fs-small);
+  color: var(--text-tertiary);
+}
+
+.cert__view {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: var(--fs-small);
+  font-weight: 500;
+}

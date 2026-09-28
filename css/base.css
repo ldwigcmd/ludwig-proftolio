@@ -1,0 +1,98 @@
+/* ==========================================================================
+   base.css — element defaults, typography, browser surfaces
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  caret-color: var(--accent);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+h1, h2, h3 {
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-snug);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+* {
+  scrollbar-color: var(--fill-strong) transparent;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--gutter);
+  z-index: 30;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  background: var(--button);
+  color: var(--on-accent);
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.skip-link:focus-visible {
+  top: 12px;
+}
+
+/* Scroll entry: only when JS is running, so the page is readable without it */
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  filter: blur(8px);
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}

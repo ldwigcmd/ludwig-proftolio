@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Ludwig Intal — Computer Engineer</title>
+  <meta name="description" content="Portfolio of Ludwig Intal, a computer engineer who integrates software and hardware to build functional systems." />
+  <meta name="theme-color" content="#f5f5f7" id="meta-theme-color" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/contact.css" />
+
+  <!-- Applies the saved theme before first paint so there is no flash -->
+  <script src="js/theme-init.js"></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <!-- Floating navigation island -->
+  <header class="island" id="island">
+    <a class="island__brand" href="#top">Ludwig Intal</a>
+
+    <nav class="island__nav" aria-label="Sections">
+      <a class="island__link" href="#about">About</a>
+      <a class="island__link" href="#experience">Experience</a>
+      <a class="island__link" href="#projects">Projects</a>
+      <a class="island__link" href="#skills">Skills</a>
+      <a class="island__link" href="#education">Education</a>
+      <a class="island__link" href="#contact">Contact</a>
+    </nav>
+
+    <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch appearance">
+      <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="4.2" />
+        <path d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.35 5.35l1.85 1.85M16.8 16.8l1.85 1.85M18.65 5.35L16.8 7.2M7.2 16.8l-1.85 1.85" stroke-linecap="round" />
+      </svg>
+      <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M20.3 14.2A8.4 8.4 0 0 1 9.8 3.7a8.4 8.4 0 1 0 10.5 10.5z" />
+      </svg>
+    </button>
+
+    <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+      <span class="menu-btn__bar"></span>
+      <span class="menu-btn__bar"></span>
+    </button>
+  </header>
+
+  <!-- Full-screen menu for small screens -->
+  <div class="menu" id="menu" hidden>
+    <nav aria-label="Sections">
+      <ul class="menu__list">
+        <li style="--i:0"><a class="menu__link" href="#about">About</a></li>
+        <li style="--i:1"><a class="menu__link" href="#experience">Experience</a></li>
+        <li style="--i:2"><a class="menu__link" href="#projects">Projects</a></li>
+        <li style="--i:3"><a class="menu__link" href="#skills">Skills</a></li>
+        <li style="--i:4"><a class="menu__link" href="#education">Education</a></li>
+        <li style="--i:5"><a class="menu__link" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <main id="content">
+    <!-- Hero: name and summary beside the portrait -->
+    <section class="section section--hero" id="top" aria-labelledby="hero-name">
+      <div class="container bento" id="hero"></div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <h2 class="section__title reveal" id="about-title">About</h2>
+        <div class="bento" id="about-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="experience" aria-labelledby="experience-title">
+      <div class="container">
+        <h2 class="section__title reveal" id="experience-title">Experience</h2>
+        <div class="bento" id="experience-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="projects" aria-labelledby="projects-title">
+      <div class="container">
+        <h2 class="section__title reveal" id="projects-title">Projects</h2>
+        <div class="bento" id="projects-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="skills" aria-labelledby="skills-title">
+      <div class="container">
+        <h2 class="section__title reveal" id="skills-title">Skills</h2>
+        <div class="bento" id="skills-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="education" aria-labelledby="education-title">
+      <div class="container">
+        <h2 class="section__title reveal" id="education-title">Education</h2>
+        <div class="bento" id="education-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <h2 class="section__title reveal" id="contact-title">Contact</h2>
+        <div class="bento">
+          <div class="tile tile--12 reveal">
+            <div class="tile__core contact">
+              <div class="contact__intro">
+                <p class="contact__lead" id="contact-blurb"></p>
+                <ul class="contact__links" id="contact-links"></ul>
+              </div>
+
+              <form class="contact-form" id="contact-form" novalidate>
+                <div class="field">
+                  <label class="field__label" for="cf-name">Name</label>
+                  <input class="field__input" id="cf-name" name="name" type="text" autocomplete="name" required />
+                  <p class="field__error" id="cf-name-error" hidden>Enter your name.</p>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="cf-email">Email</label>
+                  <input class="field__input" id="cf-email" name="email" type="email" autocomplete="email" required />
+                  <p class="field__error" id="cf-email-error" hidden>Enter an email address like name@company.com.</p>
+                </div>
+
+                <div class="field field--full">
+                  <label class="field__label" for="cf-subject">Subject</label>
+                  <input class="field__input" id="cf-subject" name="subject" type="text" required />
+                  <p class="field__error" id="cf-subject-error" hidden>Add a subject.</p>
+                </div>
+
+                <div class="field field--full">
+                  <label class="field__label" for="cf-message">Message</label>
+                  <textarea class="field__input field__input--area" id="cf-message" name="message" rows="6" required></textarea>
+                  <p class="field__error" id="cf-message-error" hidden>Write a short message.</p>
+                </div>
+
+                <div class="field--full">
+                  <button class="btn btn--primary" type="submit">
+                    Open in mail app
+                    <span class="btn__icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5" /></svg></span>
+                  </button>
+                </div>
+
+                <p class="contact-form__status field--full" id="contact-status" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="container" id="footer-copy"></p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="js/contact.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
