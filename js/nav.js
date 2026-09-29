@@ -72,9 +72,35 @@ window.Nav = (function () {
     });
   }
 
+  // "Read more" sheets: native modal dialogs. Escape and the browser already
+  // close them and return focus; this adds the open button, the close button
+  // and a click on the dimmed page around the sheet.
+  function sheets() {
+    document.addEventListener("click", function (e) {
+      var opener = e.target.closest("[data-open]");
+      if (opener) {
+        var dialog = document.getElementById(opener.getAttribute("data-open"));
+        if (dialog && dialog.showModal) {
+          dialog.showModal();
+          dialog.querySelector(".sheet__body").scrollTop = 0;
+          // Back to the button that opened it, however the sheet is closed
+          dialog.addEventListener("close", function () { opener.focus(); }, { once: true });
+        }
+        return;
+      }
+      if (e.target.closest("[data-close]")) {
+        e.target.closest("dialog").close();
+        return;
+      }
+      // The dialog element itself is only hit outside its content: the backdrop
+      if (e.target.tagName === "DIALOG") e.target.close();
+    });
+  }
+
   function init() {
     activeSection(Array.prototype.slice.call(document.querySelectorAll(".island__link")));
     menu();
+    sheets();
   }
 
   return { init: init };

@@ -204,16 +204,57 @@ window.Render = (function () {
     );
   }
 
+  // The "Read more" window: a project's `more` blocks as a modal sheet
+  var CLOSE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18" /></svg>';
+
+  function block(b) {
+    if (b.h) return "<h3>" + esc(b.h) + "</h3>";
+    if (b.sub) return "<h4>" + esc(b.sub) + "</h4>";
+    if (b.p) return "<p>" + esc(b.p) + "</p>";
+    if (b.list) return "<ul>" + b.list.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    if (b.table) {
+      return (
+        '<table class="sheet__table"><tbody>' +
+          b.table.map(function (r) { return '<tr><th scope="row">' + esc(r[0]) + "</th><td>" + esc(r[1]) + "</td></tr>"; }).join("") +
+        "</tbody></table>"
+      );
+    }
+    return "";
+  }
+
+  function sheet(p) {
+    var id = "more-" + slug(p.title);
+    return (
+      '<dialog class="sheet" id="' + id + '" aria-labelledby="' + id + '-title">' +
+        '<div class="sheet__head">' +
+          '<h2 class="sheet__title" id="' + id + '-title">' + esc(p.title) + "</h2>" +
+          '<button class="icon-btn sheet__close" type="button" data-close aria-label="Close">' + CLOSE_ICON + "</button>" +
+        "</div>" +
+        // Focus lands on the text when the sheet opens, so arrow keys scroll it
+        '<div class="sheet__body" tabindex="-1" autofocus>' + p.more.map(block).join("") + "</div>" +
+      "</dialog>"
+    );
+  }
+
   function projects() {
     var host = el("projects-grid");
     if (!host || !D.projects) return;
 
+    // Sheets live outside the stories, so a tilting card never moves them
+    var sheets = el("sheets");
+    if (sheets) {
+      sheets.innerHTML = D.projects.filter(function (p) { return p.more && p.more.length; }).map(sheet).join("");
+    }
+
     host.innerHTML = D.projects
       .map(function (p, i) {
         var kind = KIND[p.kind] || { cta: "Open project", soon: "Link coming soon" };
-        var foot = p.url
+        var foot = (p.url
           ? button(kind.cta, p.url, "primary")
-          : p.video ? "" : '<p class="story__soon">' + esc(kind.soon) + "</p>";
+          : p.video ? "" : '<p class="story__soon">' + esc(kind.soon) + "</p>") +
+          (p.more && p.more.length
+            ? '<button class="btn btn--primary" type="button" data-open="more-' + slug(p.title) + '" aria-haspopup="dialog">Read more' + ARROW + "</button>"
+            : "");
 
         return (
           '<article class="tile tile--12 story story--project reveal" id="project-' + slug(p.title) + '" style="--i:' + i + '">' +
