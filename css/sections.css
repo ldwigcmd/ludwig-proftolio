@@ -34,7 +34,7 @@
 }
 
 /* Each drawing's own colour fills any space its frame adds around it */
-.story__art[data-art="wetware"]     { background-color: var(--c-water); }
+.story__art[data-art="camote"]      { background-color: var(--c-night); }
 .story__art[data-art="brailingo"]   { background-color: var(--c-orange); }
 .story__art[data-art="kiosk"]       { background-color: var(--c-green); }
 .story__art[data-art="degree"]      { background-color: var(--c-indigo); }
@@ -506,22 +506,8 @@ a.tile:focus-visible {
 
 /* Drawn pictures come alive while on screen (reveal.js adds .is-playing) ---- */
 
-/* The water drifts by one wave period, forever, only while visible */
-.art__drift {
-  animation: art-drift 9s linear infinite paused;
-}
-
-.art__drift--slow {
-  animation-duration: 15s;
-}
-
-.is-playing .art__drift,
 .is-playing .art__blink {
   animation-play-state: running;
-}
-
-@keyframes art-drift {
-  to { transform: translateX(-120px); }
 }
 
 .art__blink {
@@ -567,7 +553,6 @@ a.tile:focus-visible {
 
   .is-in .flow__pulse,
   .is-in:hover .flow__pulse,
-  .art__drift,
   .art__blink,
   .is-in .art__dot,
   .is-in:hover .art__dot {
@@ -840,4 +825,29 @@ html:has(.sheet[open]) {
   .sheet::backdrop {
     animation: none;
   }
+}
+
+/* "Read more": a plain text link whose underline draws in on hover */
+.more-link {
+  margin-left: var(--space-sm);
+  padding: 0.6rem 0.15rem;
+  background-origin: content-box;
+  background-clip: content-box;
+  color: var(--accent);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.more-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* A story with no write-up yet still opens, with a short note */
+.sheet__body > p.sheet__empty {
+  color: var(--text-tertiary);
+  font-size: var(--fs-body);
+  font-weight: 400;
 }

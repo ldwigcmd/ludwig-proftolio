@@ -37,28 +37,33 @@ window.PORTFOLIO = {
 
   projects: [
     {
-      title: "WetWare",
-      subtitle: "Real-time water quality monitoring",
-      role: "Software Leader",
-      year: "2025",
+      title: "CAMote",
+      subtitle: "Helmet-violation detection and plate lookup",
+      role: "Solo Developer",
+      year: "2026",
       kind: "site",
       description:
-        "An ESP32-based IoT system that monitors water pH, TDS and temperature in real time. " +
-        "A responsive web dashboard with secure controls shows the readings, and CSV data " +
-        "logged to the ESP32's LittleFS storage feeds the graphs and reports.",
-      art: "wetware",
+        "A real-time system that spots motorcycle riders without helmets on Philippine roads and " +
+        "reads their plate numbers. A camera feed runs through YOLOv8 with ByteTrack to detect and " +
+        "track riders, PaddleOCR reads the plates, and a FastAPI web app on Vercel lets the public " +
+        "search plates while admins review captures, riders and appeals.",
+      art: "camote",
       thumb: "",
-      url: "",
-      video: "",
-      tech: ["ESP32", "C++", "JavaScript (ES6)", "LittleFS", "HTML5 Canvas"],
+      url: "https://ca-mote-project.vercel.app/",
+      // Your demo video, e.g. "assets/video/camote-demo.mp4". Until set, the drawing shows.
+      video: "assets/video/camote-demo.mp4",
+      tech: ["YOLOv8", "ByteTrack", "PaddleOCR", "Python", "FastAPI", "Neon Postgres", "Vercel"],
       // How the system connects, top to bottom. `via` labels the link into a
       // part, `hub` marks the controller at the centre of the system.
       flow: [
-        { part: "Water sensors", note: "pH, TDS, temperature" },
-        { part: "ESP32", note: "Reads in real time", hub: true },
-        { part: "LittleFS", note: "CSV data logs" },
-        { part: "Web dashboard", note: "Graphs, reports, secure controls" }
-      ]
+        { part: "Camera", note: "Live road feed" },
+        { part: "YOLOv8 + ByteTrack", note: "Detects and tracks riders", hub: true },
+        { part: "PaddleOCR", note: "Reads the plate" },
+        { part: "FastAPI + Postgres", note: "Stores each violation" },
+        { part: "Web app", note: "Plate search, admin consoles" }
+      ],
+      // The "Read more" window; see BraiLingo below for the block format
+      more: []
     },
     {
       title: "BraiLingo",

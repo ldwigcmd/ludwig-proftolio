@@ -15,57 +15,39 @@ window.Art = (function () {
     );
   }
 
-  // A repeating wave: one period is 120 units, drawn wide enough to slide by one period
-  function wave(y, amp, fill, cls) {
-    var d = "M0 " + y + " q30 " + -amp + " 60 0";
-    for (var i = 0; i < 9; i++) d += " t60 0";
-    return '<path class="' + cls + '" d="' + d + ' V270 H0Z" fill="' + fill + '"/>';
-  }
-
-  /* ---- WetWare: an ESP32 with three probes in the water, and a dashboard -- */
-  function wetware() {
-    var pins = "";
-    for (var i = 0; i < 12; i++) {
-      pins += '<rect x="' + (170 + i * 12) + '" y="55" width="5" height="9" rx="1.5" fill="#d1d1d6"/>';
-      pins += '<rect x="' + (170 + i * 12) + '" y="126" width="5" height="9" rx="1.5" fill="#d1d1d6"/>';
-    }
-    var probes = [["pH", 204, "#30d158"], ["TDS", 240, "#ffd60a"], ["°C", 276, "#ff6b5b"]]
-      .map(function (p) {
-        return (
-          '<path d="M' + p[1] + ' 134 V194" stroke="#f5f5f7" stroke-width="3" stroke-linecap="round"/>' +
-          '<rect x="' + (p[1] - 6) + '" y="188" width="12" height="28" rx="6" fill="' + p[2] + '"/>'
-        );
-      })
-      .join("");
-    var labels = [["pH", 204], ["TDS", 240], ["°C", 276]]
-      .map(function (p) {
-        return '<text x="' + p[1] + '" y="234" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">' + p[0] + "</text>";
-      })
-      .join("");
-
-    return svg("Illustration of WetWare: an ESP32 board with pH, TDS and temperature probes in water, sending readings to a dashboard",
-      '<rect width="480" height="270" fill="var(--c-water)"/>' +
-      // a drop of water, for scale and subject
-      '<path d="M88 58 C88 58 64 88 64 104 a24 24 0 0 0 48 0 C112 88 88 58 88 58Z" fill="#5ac8fa"/>' +
-      '<path d="M78 104 a10 10 0 0 0 10 10" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>' +
-      '<g class="art__drift art__drift--slow">' + wave(180, 10, "#1c94d8", "") + "</g>" +
-      probes +
-      // the board
-      pins +
-      '<rect x="160" y="62" width="160" height="66" rx="9" fill="#1d1d1f"/>' +
-      '<rect x="206" y="76" width="46" height="38" rx="4" fill="#3a3a3c"/>' +
-      '<rect x="214" y="88" width="30" height="3" rx="1.5" fill="#8e8e93"/>' +
-      '<rect x="214" y="96" width="20" height="3" rx="1.5" fill="#8e8e93"/>' +
-      '<circle class="art__blink" cx="180" cy="80" r="4.5" fill="#30d158"/>' +
-      '<path d="M290 74 h16 v9 h-12 v9 h12 v9 h-16" stroke="#ffd60a" stroke-width="3" fill="none" stroke-linejoin="round"/>' +
-      // the reading travelling to the dashboard
-      '<path d="M314 78 q18 -16 38 -4" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-dasharray="3 6" stroke-linecap="round"/>' +
-      '<rect x="352" y="50" width="104" height="80" rx="12" fill="#ffffff"/>' +
-      '<text x="364" y="70" font-size="11" font-weight="600" fill="#6e6e73">pH</text>' +
-      '<text x="364" y="96" font-size="24" font-weight="700" fill="#1d1d1f">7.2</text>' +
-      '<polyline points="364,118 380,110 394,114 410,104 424,108 444,98" fill="none" stroke="var(--c-water)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
-      '<g class="art__drift">' + wave(198, 8, "rgba(90, 200, 250, 0.55)", "") + "</g>" +
-      labels);
+  /* ---- CAMote: a roadside camera boxing a rider without a helmet -------- */
+  function camote() {
+    return svg("Illustration of CAMote: a roadside camera detects a motorcycle rider without a helmet and reads the plate",
+      '<rect width="480" height="270" fill="var(--c-night)"/>' +
+      // the camera's view across the road
+      '<polygon points="146,56 440,66 440,224 146,64" fill="#ffffff" opacity=".06"/>' +
+      '<rect x="0" y="206" width="480" height="64" fill="#16223a"/>' +
+      '<path d="M0 238 H480" stroke="#ffffff" stroke-width="3" stroke-dasharray="22 18" opacity=".35"/>' +
+      // the pole and camera
+      '<rect x="52" y="40" width="8" height="168" rx="3" fill="#8e8e93"/>' +
+      '<rect x="52" y="48" width="56" height="6" rx="3" fill="#8e8e93"/>' +
+      '<rect x="94" y="40" width="46" height="24" rx="6" fill="#f5f5f7"/>' +
+      '<circle cx="140" cy="52" r="8" fill="#1d1d1f"/><circle cx="140" cy="52" r="3.5" fill="#5ac8fa"/>' +
+      '<circle class="art__blink" cx="104" cy="47" r="2.5" fill="#ff453a"/>' +
+      // the motorcycle
+      '<circle cx="262" cy="190" r="18" fill="none" stroke="#f5f5f7" stroke-width="5"/>' +
+      '<circle cx="356" cy="190" r="18" fill="none" stroke="#f5f5f7" stroke-width="5"/>' +
+      '<path d="M262 190 L294 158 L334 158 L356 190" fill="none" stroke="#f5f5f7" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '<path d="M338 158 L350 134" stroke="#f5f5f7" stroke-width="5" stroke-linecap="round"/>' +
+      '<rect x="288" y="148" width="48" height="11" rx="5.5" fill="#f5f5f7"/>' +
+      // the rider, bare-headed
+      '<rect x="300" y="106" width="26" height="46" rx="11" fill="#ff9f0a"/>' +
+      '<path d="M320 122 L348 136" stroke="#ff9f0a" stroke-width="8" stroke-linecap="round"/>' +
+      '<circle cx="314" cy="92" r="12" fill="#c68642"/>' +
+      '<path d="M302 90 a12 12 0 0 1 24 -2 q-12 -6 -24 2z" fill="#1d1d1f"/>' +
+      // what the camera sees: no helmet, and the plate
+      '<rect x="294" y="74" width="40" height="38" rx="3" fill="none" stroke="#ffd60a" stroke-width="3"/>' +
+      '<rect x="294" y="58" width="78" height="16" rx="3" fill="#ffd60a"/>' +
+      '<text x="300" y="70" font-size="10" font-weight="700" fill="#1d1d1f">NO HELMET</text>' +
+      '<rect x="236" y="172" width="26" height="14" rx="2" fill="#ffffff"/>' +
+      '<rect x="231" y="167" width="36" height="24" rx="3" fill="none" stroke="#30d158" stroke-width="2.5"/>' +
+      '<rect x="219" y="194" width="60" height="16" rx="3" fill="#30d158"/>' +
+      '<text x="249" y="206" text-anchor="middle" font-size="10" font-weight="700" fill="#1d1d1f">AB1234</text>');
   }
 
   /* ---- BraiLingo: a Braille cell device spelling READ, and the quiz app --- */
@@ -199,7 +181,7 @@ window.Art = (function () {
       : "";
   }
 
-  var DRAWINGS = { wetware: wetware, brailingo: brailingo, kiosk: kiosk, degree: degree, certificate: certificate };
+  var DRAWINGS = { camote: camote, brailingo: brailingo, kiosk: kiosk, degree: degree, certificate: certificate };
 
   function draw(name) {
     return DRAWINGS[name] ? DRAWINGS[name]() : "";

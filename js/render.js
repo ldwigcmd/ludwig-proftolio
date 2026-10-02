@@ -176,7 +176,7 @@ window.Render = (function () {
      and otherwise says what is coming instead of linking nowhere. */
 
   var KIND = {
-    site: { cta: "Open live site", soon: "Live site coming soon" },
+    site: { cta: "View site", soon: "Live site coming soon" },
     repo: { cta: "Open repository", soon: "Repository coming soon" },
     video: { cta: "Watch video", soon: "Video demo coming soon" },
     "case study": { cta: "Read case study", soon: "Case study coming soon" }
@@ -231,7 +231,9 @@ window.Render = (function () {
           '<button class="icon-btn sheet__close" type="button" data-close aria-label="Close">' + CLOSE_ICON + "</button>" +
         "</div>" +
         // Focus lands on the text when the sheet opens, so arrow keys scroll it
-        '<div class="sheet__body" tabindex="-1" autofocus>' + p.more.map(block).join("") + "</div>" +
+        '<div class="sheet__body" tabindex="-1" autofocus>' +
+          (p.more.length ? p.more.map(block).join("") : '<p class="sheet__empty">More about ' + esc(p.title) + " is on its way.</p>") +
+        "</div>" +
       "</dialog>"
     );
   }
@@ -243,7 +245,7 @@ window.Render = (function () {
     // Sheets live outside the stories, so a tilting card never moves them
     var sheets = el("sheets");
     if (sheets) {
-      sheets.innerHTML = D.projects.filter(function (p) { return p.more && p.more.length; }).map(sheet).join("");
+      sheets.innerHTML = D.projects.filter(function (p) { return Array.isArray(p.more); }).map(sheet).join("");
     }
 
     host.innerHTML = D.projects
@@ -252,8 +254,9 @@ window.Render = (function () {
         var foot = (p.url
           ? button(kind.cta, p.url, "primary")
           : p.video ? "" : '<p class="story__soon">' + esc(kind.soon) + "</p>") +
-          (p.more && p.more.length
-            ? '<button class="btn btn--primary" type="button" data-open="more-' + slug(p.title) + '" aria-haspopup="dialog">Read more' + ARROW + "</button>"
+          // A `more` list (even an empty one) gives the story a Read more link
+          (Array.isArray(p.more)
+            ? '<button class="more-link draw-link" type="button" data-open="more-' + slug(p.title) + '" aria-haspopup="dialog">Read more</button>'
             : "");
 
         return (
