@@ -53,15 +53,6 @@ window.PORTFOLIO = {
       // Your demo video, e.g. "assets/video/camote-demo.mp4". Until set, the drawing shows.
       video: "assets/video/camote-demo.mp4",
       tech: ["YOLOv8", "ByteTrack", "PaddleOCR", "Python", "FastAPI", "Neon Postgres", "Vercel"],
-      // How the system connects, top to bottom. `via` labels the link into a
-      // part, `hub` marks the controller at the centre of the system.
-      flow: [
-        { part: "Camera", note: "Live road feed" },
-        { part: "YOLOv8 + ByteTrack", note: "Detects and tracks riders", hub: true },
-        { part: "PaddleOCR", note: "Reads the plate" },
-        { part: "FastAPI + Postgres", note: "Stores each violation" },
-        { part: "Web app", note: "Plate search, admin consoles" }
-      ],
       // The "Read more" window; see BraiLingo below for the block format
       more: []
     },
@@ -83,12 +74,6 @@ window.PORTFOLIO = {
       // the file from this site instead, use e.g. "assets/video/brailingo-demo.mp4".
       video: "assets/video/brailingo-demo.mp4",  // backup copy: https://youtu.be/tp2VrH9mEes
       tech: ["Raspberry Pi 4B", "Flutter", "PCF8575 I2C", "PWM solenoids", "TCP"],
-      flow: [
-        { part: "Flutter app", note: "Android, spaced-repetition quizzes" },
-        { part: "Raspberry Pi 4B", note: "Drives the device", via: "TCP", hub: true },
-        { part: "PCF8575", note: "GPIO expander", via: "I2C" },
-        { part: "Solenoid actuators", note: "Raise the Braille dots", via: "PWM" }
-      ],
       // The "Read more" window. Each block is one of:
       //   { h: "Heading" }, { sub: "Smaller heading" }, { p: "Paragraph" },
       //   { list: ["item", ...] }, { table: [["Left", "Right"], ...] }

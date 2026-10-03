@@ -260,8 +260,10 @@ window.Render = (function () {
             : "");
 
         return (
-          '<article class="tile tile--12 story story--project reveal" id="project-' + slug(p.title) + '" style="--i:' + i + '">' +
-            picture(p, "story__art--banner") +
+          // Side by side: each story stacks its picture, text, wiring, then its
+          // links at the bottom so they line up across the pair
+          '<article class="tile tile--6 story story--project reveal" id="project-' + slug(p.title) + '" style="--i:' + i + '">' +
+            picture(p) +
             '<div class="story__body project">' +
               '<div class="project__text">' +
                 '<h3 class="project__title">' + esc(p.title) + "</h3>" +
@@ -269,9 +271,9 @@ window.Render = (function () {
                 '<p class="story__meta">' + esc([p.role, p.year].filter(Boolean).join(", ")) + "</p>" +
                 '<p class="story__desc">' + esc(p.description) + "</p>" +
                 (p.tech && p.tech.length ? '<p class="story__tech">' + esc(p.tech.join(", ")) + "</p>" : "") +
-                (foot ? '<div class="story__foot">' + foot + "</div>" : "") +
               "</div>" +
               flow(p) +
+              (foot ? '<div class="story__foot">' + foot + "</div>" : "") +
             "</div>" +
           "</article>"
         );
