@@ -15,9 +15,9 @@ window.PORTFOLIO = {
   },
 
   about: [
-    "A Computer Engineer experienced in integrating software and hardware to develop functional systems with the " +
-      "help of AI. Skilled in building and refining working programs while transforming messy and unstructured data " +
-      "into clean, organized, and readable datasets for analysis and decision-making. ",
+    "A Computer Engineer experienced in integrating software and hardware to develop functional systems and " +
+      "programs with the help of AI. Skilled in building, testing, and refining programs, troubleshooting hardware " +
+      "issues, and transforming messy and unstructured data into clean, organized, and readable datasets. ",
 
   ],
 
